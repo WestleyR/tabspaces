@@ -113,7 +113,6 @@ int main(int argc, char **argv) {
         }
         if (find_args(argv[i], "d") == 0) {
             diff_view = 1;
-            printf("view the diff...\n");
         }
         if (find_args(argv[i], "V") == 0) {
             version_print();

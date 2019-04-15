@@ -16,7 +16,6 @@
 
 int tabs_to_spaces(char*, int, int);
 
-
 //
 // End tabs-spaces.h
 //
