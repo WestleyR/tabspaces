@@ -16,6 +16,8 @@
 #include "tabs-spaces.h"
 
 #include "logger/logger.h"
+#include "c-utils/c-utils.h"
+#include "color.h"
 
 FILE *check_file_fr;
 
@@ -43,10 +45,32 @@ int check_file(const char* filepath) {
     return(0);
 }
 
+//void add_char_to_string(char* s, char c) {
+//    int len = strlen(s);
+//    s[len] = c;
+//    s[len+1] = '\0';
+//}
+
+char ret[256];
+char* remove_tab_line(char* line, int spaces_set) {
+    int count;
+
+    for (count = 0; count <= strlen(line); count++) {
+        if (line[count] == '\t') {
+            strcat(ret, "    ");
+        } else {
+            add_char_to_string(ret, line[count]);
+        }
+    }
+
+    return ret;
+}
+
 int view_diff(const char* file_path, int spaces_set) {
     print_verbosef("Viewing the diff\n");
 
     FILE *fr = fopen(file_path, "r");
+    int tab_count = 0;
 
     if (fr == NULL) {
     	printf("Couldn't open file: %s!\n", file_path);
@@ -64,92 +88,26 @@ int view_diff(const char* file_path, int spaces_set) {
         return(1);
     }
 
-    int c;
-    int spaces = 0;
-    int charRead = 0;
-//    int ch = 0;
-//    char line[200];
+    int c_line;
+    int lines_count = 0;
+    char line[128];
 
-
-//    FILE *fw;
-//    FILE *fr;
-    int exited = 0;
-
-//    if (check_file(file_path) != 0) {
-//        print_errorf("theres a problome with: %s\n", file_path);
-//        return(10);
-//    }
-//
-//    if (check_file_fr == NULL) {
-//        print_errorf("file is NULL\n");
-//        return(12);
-//    }
-
-//    printf("FILE: %c\n", check_file_fr);
-
-    int lines = 0;
-
-    while ((c = fgetc(fr)) != EOF) {
-//    while ((c = fgetc(check_file_fr)) != EOF) {
-
-//        if (exited == 1) {
-//            spaces++;
-//            if (spaces == charRead) {
-//                spaces = 0;
-//                exited = 0;
-//            }
-//            continue;
-//        }
-
-        charRead++;
-
-//        printf("cc %c\n", c);
-
-
-        if (c == '\t') {
-//            printf("INFO:C: %c\n", c);
-//            printf("charRead: %i\n", charRead);
-//            printf("spaces: %i\n", spaces);
-            printf("TAB on line: %i\n", lines+1);
-//            for (int i = spaces; i < spaces_set; i++) {
-//                line[ch++] = ' ';
-//            }
-            spaces = 0;
-        } else {
-//            printf("NOT A TAB: %c\n", c);
-            spaces++;
-            if (spaces == 4) {
-                spaces = 0;
+    while (fgets(line, sizeof line, fr) != NULL) {
+        lines_count++;
+        for (c_line = 0; c_line <= strlen(line); c_line++) {
+            if (line[c_line] == '\t') {
+                printf("\nTAB on line: %s:%i\n", file_path, lines_count);
+                printf("%s:%i:%s--%s%s", file_path, lines_count, RED, line, COLOR_RESET);
+                printf("%s:%i:%s++%s%s", file_path, lines_count, GREEN, remove_tab_line(line, spaces_set), COLOR_RESET);
+                ret[0] = '\0';
+                tab_count++;
             }
-//            line[ch++] = c;
         }
-
-        if (c == '\n') {
-            lines++;
-//            line[ch] = '\0';
-//            spaces = 0;
-//            ch = 0;
-        }
-
-
-/*        if (c == '\n') {
-            line[ch] = '\0';
-            spaces = 0;
-            ch = 0;
-
-            fclose(check_file_fr);
-
-            printf("IINNFFOO:: %s\n", line);
-
-            fw = fopen(TMP_FILE, "a");
-            fputs(line, fw);
-            fclose(fw);
-
-            fr = fopen(file_path, "r");
-            exited = 1;
-        }*/
     }
-//    fclose(fr);
+    fclose(fr);
+
+    printf("\n");
+    print_verbosef("Total tabs in %s: %i\n", file_path, tab_count);
 
     return(0);
 }
@@ -181,22 +139,11 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
         return(1);
     }
 
-//    if (check_file(file_path) != 0) {
-//        print_errorf("there was a problome with: %s\n", file_path);
-//        return(1);
-//    }
-
     FILE *fw;
-//    FILE *fr;
     int exited = 0;
-
-    if (check_file_fr == NULL) {
-        print_errorf("file is NULL\n");
-        return(10);
-    }
+    int line_count = 0;
 
     while ((c = fgetc(fr)) != EOF) {
-//    while ((c = fgetc(check_file_fr)) != EOF) {
         if (exited == 1) {
             spaces++;
             if (spaces == charRead) {
@@ -207,9 +154,8 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
         }
         charRead++;
 
-        printf("cc %c\n", c);
-
         if (c == '\t') {
+            print_verbosef("There is a tab on line: %i: replacing with %i spaces\n", line_count+1, spaces_set);
             for (int i = spaces; i < spaces_set; i++) {
                 line[ch++] = ' ';
             }
@@ -227,9 +173,7 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
             spaces = 0;
             ch = 0;
 
-            fclose(check_file_fr);
-
-            printf("IINNFFOO:: %s\n", line);
+            fclose(fr);
 
             fw = fopen(TMP_FILE, "a");
             fputs(line, fw);
@@ -237,6 +181,7 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
 
             fr = fopen(file_path, "r");
             exited = 1;
+            line_count++;
         }
     }
 

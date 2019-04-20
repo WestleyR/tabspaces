@@ -50,7 +50,7 @@ $(OBJS): $(SRC)
 
 .PHONY:
 clean:
-	rm -f main-tabspaces.o tabs-spaces.o arglib.o logger.o
+	rm -f main-tabspaces.o tabs-spaces.o arglib.o logger.o spaces-tabs.o c-utils.o
 
 .PHONY:
 test: $(TARGET)

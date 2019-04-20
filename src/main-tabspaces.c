@@ -17,6 +17,7 @@
 
 #include "main-tabspaces.h"
 #include "tabs-spaces.h"
+#include "spaces-tabs.h"
 
 #include "arglib/arglib.h"
 #include "logger/logger.h"
@@ -34,12 +35,17 @@ void help_menu() {
     printf("OPTIONS:\n");
     printf("  -h, --help    : print help menu.\n");
     printf("  -v, --verbose : verbose.\n");
-    printf("  -V, --version : print version.\n");
     printf("  -d, --diff    : only print the diff.\n");
+    printf("  -t, --tab     : convert spaces (default 4) to tabs.\n");
+    printf("  -V, --version : print version.\n");
     printf("\n");
     printf("VARS:\n");
     printf("  --spaces=int  : set how many spaces when converting\n");
     printf("                  tabs to spaces (default 4)\n");
+    printf("\n");
+    printf("EXAMPLES:\n");
+    printf("  $ %s --spaces=2 -v file.go\n", SCRIPT_NAME);
+    printf("  $ %s -vt file.go\n", SCRIPT_NAME);
     printf("\n");
     printf("This software is licensed under a Clear BSD License.\n");
     printf("Copyright (c) 2019 WestleyR, All rights reserved.\n");
@@ -64,6 +70,7 @@ int main(int argc, char **argv) {
     char *path = NULL;
     int diff_view = 0;
     int verbose_print = 0;
+    int sp_t = 0;
 
 // loop throught all the arguments
     for (int i=1; i < argc; i++) {
@@ -81,11 +88,15 @@ int main(int argc, char **argv) {
         if (check_flag(argv[i], "", "--help") == 0) {
             help_menu();
             return(0);
+        } else if (check_flag(argv[i], "", "--diff") == 0) {
+            diff_view = 1;
+        } else if (check_flag(argv[i], "", "--tabs") == 0) {
+            sp_t = 1;
+        } else if (check_flag(argv[i], "", "--verbose") == 0) {
+            verbose_print = 1;
         } else if (check_flag(argv[i], "", "--version") == 0) {
             version_print();
             return(0);
-        } else if (check_flag(argv[i], "", "--verbose") == 0) {
-            verbose_print = 1;
         } else if ((strstr(argv[i], "--") == argv[i]) && (strstr(argv[i], SPACES_SET_FLAG) != argv[i])) {
             print_errorf("%s: option not found\n", argv[i]);
             return(2);
@@ -95,8 +106,8 @@ int main(int argc, char **argv) {
 
         // all the possible short args, will automatically print error
         // for example, $ ./your-code -lds --out=file
-        if (check_small_args(argv[i], "hvdV") != 0) {
-            print_errorf("%s: option not found\n", argv[i]);
+        if (check_small_args(argv[i], "hvdtV") != 0) {
+            print_errorf("-%s: option not found\n", argv[i]);
             return(1);
         }
 
@@ -114,6 +125,9 @@ int main(int argc, char **argv) {
         if (find_args(argv[i], "d") == 0) {
             diff_view = 1;
         }
+        if (find_args(argv[i], "t") == 0) {
+            sp_t = 1;
+        }
         if (find_args(argv[i], "V") == 0) {
             version_print();
             return(0);
@@ -130,6 +144,16 @@ int main(int argc, char **argv) {
     }
 //    printf("PATH: %s\n", path);
     //int err;
+
+    if (sp_t != 0) {
+        int err = spaces_to_tabs(path, SPACES_SET, diff_view);
+        if (err != 0) {
+            print_errorf("Unable to convert spaces to tabs\n");
+            return(4);
+        }
+        return(0);
+    }
+
     int err = tabs_to_spaces(path, SPACES_SET, diff_view);
     if (err != 0) {
         print_errorf("Unable to convert tabs-to-spaces\n");

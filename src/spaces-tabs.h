@@ -12,15 +12,10 @@
 // This software is licensed under a Clear BSD License.
 //
 
-#define TABSPACES_VERSION "1.0.0-beta-8, Apr 16, 2019"
+#define TMP_FILE ".temp.tmp"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
+int spaces_to_tabs(char*, int, int);
 
 //
-// End main-tabspaces.h
+// End spaces-taps.h
 //
