@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 4, 2019
+// Date: Apr 19, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -44,12 +44,6 @@ int check_file(const char* filepath) {
 
     return(0);
 }
-
-//void add_char_to_string(char* s, char c) {
-//    int len = strlen(s);
-//    s[len] = c;
-//    s[len+1] = '\0';
-//}
 
 char ret[256];
 char* remove_tab_line(char* line, int spaces_set) {
@@ -118,6 +112,7 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
     int charRead = 0;
     int ch = 0;
     char line[200];
+    int total_count = 0;
 
     FILE *fr = fopen(file_path, "r");
 
@@ -155,7 +150,6 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
         charRead++;
 
         if (c == '\t') {
-            print_verbosef("There is a tab on line: %i: replacing with %i spaces\n", line_count+1, spaces_set);
             for (int i = spaces; i < spaces_set; i++) {
                 line[ch++] = ' ';
             }
@@ -169,6 +163,7 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
         }
 
         if (c == '\n') {
+            total_count++;
             line[ch] = '\0';
             spaces = 0;
             ch = 0;
@@ -190,11 +185,12 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
     remove(file_path);
     rename(TMP_FILE, file_path);
     printf("Done: %s\n", file_path);
+    print_verbosef("Total tabs replaced: %i\n", total_count);
 
     return(0);
 }
 
-// tabs_to_spaces ...
+// tabs_to_spaces
 int tabs_to_spaces(char* file_path, int spaces_set, int diff_view) {
     if (diff_view != 0) {
         return(view_diff(file_path, spaces_set));

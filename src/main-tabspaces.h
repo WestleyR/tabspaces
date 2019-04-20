@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 4, 2019
+// Date: Apr 19, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -12,7 +12,7 @@
 // This software is licensed under a Clear BSD License.
 //
 
-#define TABSPACES_VERSION "1.0.0-beta-8, Apr 16, 2019"
+#define TABSPACES_VERSION "1.0.0-beta-10, Apr 19, 2019"
 
 #include <stdio.h>
 #include <stdlib.h>
