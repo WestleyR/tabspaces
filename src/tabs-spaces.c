@@ -17,7 +17,7 @@
 
 #include "logger/logger.h"
 #include "c-utils/c-utils.h"
-#include "color.h"
+#include "colorc/colorc.h"
 
 FILE *check_file_fr;
 
