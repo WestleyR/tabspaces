@@ -35,24 +35,23 @@ SRC += $(wildcard deps/*/*.c)
 
 OBJS = $(SRC:.c=.o)
 
+ALLFILE = $(notdir $(SRC))
+OBJS_COMPILE = $(ALLFILE:.c=.o)
+
 .PHONY:
 all: $(TARGET)
 
 .PHONY:
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJS_COMPILE)
 
 .PHONY:
 %.o: %.c
-	$(CC) $(DEP_FLAG) $(CFLAGS) $(LDFLAGS) -o $@ -c $<
+	$(CC) $(DEP_FLAG) $(CFLAGS) $(LDFLAGS) -c $<
 
 .PHONY:
 clean:
-	rm -f $(OBJS)
-
-.PHONY:
-cleanall:
-	rm -f $(OBJS) $(TARGET)
+	rm -f rm logger.o main-tabspaces.o spaces-tabs.o tabs-spaces.o c-utils.o arglib.o
 
 .PHONY:
 install: $(TARGET)
