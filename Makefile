@@ -58,6 +58,14 @@ cleanall:
 install: $(TARGET)
 	cp -f $(TARGET) $(PREFIX)
 
+.PHONY:
+test: $(TARGET)
+	./tests/tests-sh
+
+.PHONY:
+uninstall: $(PREFIX)/$(TARGET)
+	rm -f $(PREFIX)/$(TARGET)
+
 #
 # End Makefile
 #
