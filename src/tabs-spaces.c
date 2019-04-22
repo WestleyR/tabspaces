@@ -44,7 +44,7 @@ int view_diff(const char* file_path, int spaces_set) {
 
     int c_line;
     int lines_count = 0;
-    char line[128];
+    char line[256];
     char ret_line[256];
 
     while (fgets(line, sizeof line, fr) != NULL) {
@@ -52,11 +52,12 @@ int view_diff(const char* file_path, int spaces_set) {
         for (c_line = 0; c_line <= strlen(line); c_line++) {
             if (line[c_line] == '\t') {
                 remove_tab_line(ret_line, line, spaces_set);
-                printf("\nTAB on line: %s:%i\n", file_path, lines_count);
-                printf("%s:%i:%s--%s%s", file_path, lines_count, RED, line, COLOR_RESET);
-                printf("%s:%i:%s++%s%s", file_path, lines_count, GREEN, ret_line, COLOR_RESET);
+                printf("\nTAB(s) on line: %s:%i\n", file_path, lines_count);
+                printf("%s:%i:%s----%s%s", file_path, lines_count, RED, line, COLOR_RESET);
+                printf("%s:%i:%s++++%s%s", file_path, lines_count, GREEN, ret_line, COLOR_RESET);
                 tab_count++;
                 ret_line[0] = '\0';
+                break;
             }
         }
     }
