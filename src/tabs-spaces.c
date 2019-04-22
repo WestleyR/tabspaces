@@ -14,51 +14,11 @@
 
 #include "main-tabspaces.h"
 #include "tabs-spaces.h"
+#include "utils.h"
 
 #include "logger/logger.h"
 #include "c-utils/c-utils.h"
 #include "colorc/colorc.h"
-
-FILE *check_file_fr;
-
-int check_file(const char* filepath) {
-    FILE *fr = fopen(filepath, "r");
-
-    if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", filepath);
-    	return(1);
-    }
-
-    struct stat info;
-    if (lstat(filepath, &info) != 0) {
-        printf("unable to open stat on: %s\n", filepath);
-        return(1);
-    }
-
-    if (S_ISDIR(info.st_mode)) {
-        printf("file is a directory: %s\n", filepath);
-        return(1);
-    }
-    check_file_fr = fr;
-    fclose(fr);
-
-    return(0);
-}
-
-char ret[256];
-char* remove_tab_line(char* line, int spaces_set) {
-    int count;
-
-    for (count = 0; count <= strlen(line); count++) {
-        if (line[count] == '\t') {
-            strcat(ret, "    ");
-        } else {
-            add_char_to_string(ret, line[count]);
-        }
-    }
-
-    return ret;
-}
 
 int view_diff(const char* file_path, int spaces_set) {
     print_verbosef("Viewing the diff\n");
@@ -85,16 +45,18 @@ int view_diff(const char* file_path, int spaces_set) {
     int c_line;
     int lines_count = 0;
     char line[128];
+    char ret_line[256];
 
     while (fgets(line, sizeof line, fr) != NULL) {
         lines_count++;
         for (c_line = 0; c_line <= strlen(line); c_line++) {
             if (line[c_line] == '\t') {
+                remove_tab_line(ret_line, line, spaces_set);
                 printf("\nTAB on line: %s:%i\n", file_path, lines_count);
                 printf("%s:%i:%s--%s%s", file_path, lines_count, RED, line, COLOR_RESET);
-                printf("%s:%i:%s++%s%s", file_path, lines_count, GREEN, remove_tab_line(line, spaces_set), COLOR_RESET);
-                ret[0] = '\0';
+                printf("%s:%i:%s++%s%s", file_path, lines_count, GREEN, ret_line, COLOR_RESET);
                 tab_count++;
+                ret_line[0] = '\0';
             }
         }
     }

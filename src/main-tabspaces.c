@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 1, 2019
+// Date: Apr 21, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     int verbose_print = 0;
     int sp_t = 0;
 
-// loop throught all the arguments
+    // loop throught all the arguments
     for (int i=1; i < argc; i++) {
         // get the output of `--out=`
         char* var;
@@ -84,7 +84,6 @@ int main(int argc, char **argv) {
             printf("SPACES:  %d\n", SPACES_SET);
         }
 
-        // check if arguments are: sort, or long args
         if (check_flag(argv[i], "", "--help") == 0) {
             help_menu();
             return(0);
@@ -104,8 +103,6 @@ int main(int argc, char **argv) {
             path = argv[i];
         }
 
-        // all the possible short args, will automatically print error
-        // for example, $ ./your-code -lds --out=file
         if (check_small_args(argv[i], "hvdtV") != 0) {
             print_errorf("-%s: option not found\n", argv[i]);
             return(1);
@@ -116,11 +113,8 @@ int main(int argc, char **argv) {
             return(0);
         }
 
-        // if `v` is in the sort argument group
         if (find_args(argv[i], "v") == 0) {
             verbose_print = 1;
-//            version_print();
-//            return(0);
         }
         if (find_args(argv[i], "d") == 0) {
             diff_view = 1;
@@ -134,28 +128,22 @@ int main(int argc, char **argv) {
         }
     }
 
-//    char* err;
-
     set_verbose(verbose_print);
 
     if (path == NULL) {
         print_errorf("No file specifyed\n");
         return(1);
     }
-//    printf("PATH: %s\n", path);
-    //int err;
 
     if (sp_t != 0) {
-        int err = spaces_to_tabs(path, SPACES_SET, diff_view);
-        if (err != 0) {
+        if (spaces_to_tabs(path, SPACES_SET, diff_view) != 0) {
             print_errorf("Unable to convert spaces to tabs\n");
             return(4);
         }
         return(0);
     }
 
-    int err = tabs_to_spaces(path, SPACES_SET, diff_view);
-    if (err != 0) {
+    if (tabs_to_spaces(path, SPACES_SET, diff_view) != 0) {
         print_errorf("Unable to convert tabs-to-spaces\n");
         return(4);
     }
