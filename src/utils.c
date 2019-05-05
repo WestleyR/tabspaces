@@ -20,8 +20,8 @@ int check_file(const char* filepath) {
     FILE *fr = fopen(filepath, "r");
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", filepath);
-    	return(1);
+        printf("Couldn't open file: %s!\n", filepath);
+        return(1);
     }
 
     struct stat info;

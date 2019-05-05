@@ -27,8 +27,8 @@ int view_diff(const char* file_path, int spaces_set) {
     int tab_count = 0;
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", file_path);
-    	return(1);
+        printf("Couldn't open file: %s!\n", file_path);
+        return(1);
     }
 
     struct stat info;
@@ -53,8 +53,8 @@ int view_diff(const char* file_path, int spaces_set) {
             if (line[c_line] == '\t') {
                 remove_tab_line(ret_line, line, spaces_set);
                 printf("\nTAB(s) on line: %s:%i\n", file_path, lines_count);
-                printf("%s:%i:%s----%s%s", file_path, lines_count, RED, line, COLOR_RESET);
-                printf("%s:%i:%s++++%s%s", file_path, lines_count, GREEN, ret_line, COLOR_RESET);
+                printf("%s:%i:%s\n%s%s", file_path, lines_count, RED, line, COLOR_RESET);
+                printf("%s\n%s%s", GREEN, ret_line, COLOR_RESET);
                 tab_count++;
                 ret_line[0] = '\0';
                 break;
@@ -82,8 +82,8 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
     print_verbosef("Converting tabs to %d spaces.\n", spaces_set);
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", file_path);
-    	return(1);
+        printf("Couldn't open file: %s!\n", file_path);
+        return(1);
     }
 
     struct stat info;

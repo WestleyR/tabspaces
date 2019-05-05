@@ -30,8 +30,8 @@ int check_file(const char* filepath) {
     FILE *fr = fopen(filepath, "r");
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", filepath);
-    	return(1);
+        printf("Couldn't open file: %s!\n", filepath);
+        return(1);
     }
 
     struct stat info;
@@ -62,8 +62,8 @@ int tabs_view_diff(const char* file_path, int spaces_set) {
 //    int tab_count = 0;
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", file_path);
-    	return(1);
+        printf("Couldn't open file: %s!\n", file_path);
+        return(1);
     }
 
     struct stat info;
@@ -107,8 +107,8 @@ int convert_spaces_to_tabs(char* file_path, int spaces_set) {
     FILE *fr = fopen(file_path, "r");
 
     if (fr == NULL) {
-    	printf("Couldn't open file: %s!\n", file_path);
-    	return(1);
+        printf("Couldn't open file: %s!\n", file_path);
+        return(1);
     }
 
     struct stat info;
@@ -171,8 +171,8 @@ int convert_spaces_to_tabs(char* file_path, int spaces_set) {
         }
 
 //        fw = fopen(TMP_FILE, "a");
-   	    fputs(new_line, fw);
-//       	fclose(fw);
+        fputs(new_line, fw);
+//          fclose(fw);
 
         new_line[0] = '\0';
         done_line = 0;
