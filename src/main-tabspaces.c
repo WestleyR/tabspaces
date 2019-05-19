@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 21, 2019
+// Date: Mat 18, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -18,6 +18,7 @@
 #include "main-tabspaces.h"
 #include "tabs-spaces.h"
 #include "spaces-tabs.h"
+#include "lint-file.h"
 
 #include "arglib/arglib.h"
 #include "logger/logger.h"
@@ -37,6 +38,7 @@ void help_menu() {
     printf("  -v, --verbose : verbose.\n");
     printf("  -d, --diff    : only print the diff.\n");
     printf("  -t, --tab     : convert spaces (default 4) to tabs.\n");
+    printf("  -l, --lint    : lint a file.\n");
     printf("  -V, --version : print version.\n");
     printf("\n");
     printf("VARS:\n");
@@ -71,6 +73,7 @@ int main(int argc, char **argv) {
     int diff_view = 0;
     int verbose_print = 0;
     int sp_t = 0;
+    int lint = 0;
 
     // loop throught all the arguments
     for (int i=1; i < argc; i++) {
@@ -103,7 +106,7 @@ int main(int argc, char **argv) {
             path = argv[i];
         }
 
-        if (check_small_args(argv[i], "hvdtV") != 0) {
+        if (check_small_args(argv[i], "hvdtlV") != 0) {
             print_errorf("-%s: option not found\n", argv[i]);
             return(1);
         }
@@ -122,6 +125,9 @@ int main(int argc, char **argv) {
         if (find_args(argv[i], "t") == 0) {
             sp_t = 1;
         }
+        if (find_args(argv[i], "l") == 0) {
+            lint = 1;
+        }
         if (find_args(argv[i], "V") == 0) {
             version_print();
             return(0);
@@ -138,6 +144,14 @@ int main(int argc, char **argv) {
     if (sp_t != 0) {
         if (spaces_to_tabs(path, SPACES_SET, diff_view) != 0) {
             print_errorf("Unable to convert spaces to tabs\n");
+            return(4);
+        }
+        return(0);
+    }
+
+    if (lint != 0) {
+        if (lint_file(path, diff_view) != 0) {
+            print_errorf("Unable to lint file\n");
             return(4);
         }
         return(0);
