@@ -1,8 +1,8 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 19, 2019
+// Date: May 18, 2019
 // https://github.com/WestleyR/tabspaces
-// version-1.0.0
+// version-1.0.1
 //
 // The Clear BSD License
 //
@@ -70,16 +70,16 @@ int view_diff(const char* file_path, int spaces_set) {
 }
 
 int convert_tabs_to_spaces(char* file_path, int spaces_set) {
-    int c;
-    int spaces = 0;
-    int charRead = 0;
-    int ch = 0;
-    char line[200];
-    int total_count = 0;
+    char line[256];
+    int c_line;
+    int lines_count = 0;
+    FILE *fw;
+    char new_line[256];
+    new_line[0] = '\0';
+    int total_tab_count = 0;
 
     FILE *fr = fopen(file_path, "r");
 
-    print_verbosef("Converting tabs to %d spaces.\n", spaces_set);
 
     if (fr == NULL) {
         printf("Couldn't open file: %s!\n", file_path);
@@ -97,58 +97,43 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
         return(1);
     }
 
-    FILE *fw;
-    int exited = 0;
-    int line_count = 0;
-
-    while ((c = fgetc(fr)) != EOF) {
-        if (exited == 1) {
-            spaces++;
-            if (spaces == charRead) {
-                spaces = 0;
-                exited = 0;
-            }
-            continue;
-        }
-        charRead++;
-
-        if (c == '\t') {
-            for (int i = spaces; i < spaces_set; i++) {
-                line[ch++] = ' ';
-            }
-            spaces = 0;
-        } else {
-            spaces++;
-            if (spaces == 4) {
-                spaces = 0;
-            }
-            line[ch++] = c;
-        }
-
-        if (c == '\n') {
-            total_count++;
-            line[ch] = '\0';
-            spaces = 0;
-            ch = 0;
-
-            fclose(fr);
-
-            fw = fopen(TMP_FILE, "a");
-            fputs(line, fw);
-            fclose(fw);
-
-            fr = fopen(file_path, "r");
-            exited = 1;
-            line_count++;
-        }
+    fw = fopen(TMP_FILE, "a");
+    if (fw == NULL) {
+        printf("unable to open tmp file: %s\n", TMP_FILE);
+        return(1);
     }
 
-    fclose(fr);
+    print_verbosef("Converting tabs to %d spaces.\n", spaces_set);
 
-    remove(file_path);
+    while (fgets(line, sizeof line, fr) != NULL) {
+        lines_count++;
+        for (c_line = 0; c_line <= strlen(line); c_line++) {
+
+            if (line[c_line] == '\t') {
+                for (int i = 0; i < spaces_set; i++) {
+                    add_char_to_string(new_line, ' ');
+                }
+                total_tab_count++;
+            } else {
+                add_char_to_string(new_line, line[c_line]);
+            }
+        }
+        fputs(new_line, fw);
+        new_line[0] = '\0';
+    }
+    fclose(fr);
+    fclose(fw);
+//    remove(file_path);
+    rename(file_path, "/tmp/tabspaces_build.bck");
     rename(TMP_FILE, file_path);
+
+    print_verbosef("Total tabs added: %i\n", total_tab_count);
     printf("Done: %s\n", file_path);
-    print_verbosef("Total tabs replaced: %i\n", total_count);
+
+    total_tab_count = 0;
+    new_line[0] = '\0';
+    c_line = 0;
+    lines_count = 0;
 
     return(0);
 }
@@ -160,7 +145,6 @@ int tabs_to_spaces(char* file_path, int spaces_set, int diff_view) {
     }
 
     return(convert_tabs_to_spaces(file_path, spaces_set));
-
 }
 
 //
