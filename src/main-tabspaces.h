@@ -12,7 +12,7 @@
 // This software is licensed under a Clear BSD License.
 //
 
-#define TABSPACES_VERSION "1.0.0-beta-16, May 25, 2019"
+#define TABSPACES_VERSION "1.0.0-beta-18, May 25, 2019"
 
 #include <stdio.h>
 #include <stdlib.h>

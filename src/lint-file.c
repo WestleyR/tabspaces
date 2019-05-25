@@ -37,9 +37,22 @@ int diff_lint(char *path) {
     int lines_count = 0;
     char line[256];
     int lint_errors = 0;
+    int new_line_error = 0;
 
     while (fgets(line, sizeof line, fr) != NULL) {
         lines_count++;
+        // Check for extra newlines
+        if (line[0] == '\n') {
+            if (new_line_error != 0) {
+                printf("Extra newline: %s: %i\n\n", path, lines_count);
+                new_line_error = 0;
+                lint_errors++;
+            }
+            new_line_error = 1;
+        } else {
+            new_line_error = 0;
+        }
+        // check for extra spaces after a line
         for (c_line = 0; c_line <= strlen(line); c_line++) {
             if (line[c_line] == '\n') {
                 if (line[c_line-1] == ' ') {
@@ -51,10 +64,10 @@ int diff_lint(char *path) {
             }
         }
     }
+
     fclose(fr);
 
-    printf("\n");
-    print_verbosef("Total tabs in %s: %i\n", path, lint_errors);
+    print_verbosef("Total lint errors in %s: %i\n", path, lint_errors);
 
     return(0);
 }
