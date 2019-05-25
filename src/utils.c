@@ -14,6 +14,8 @@
 
 #include "utils.h"
 
+#include "colorc/colorc.h"
+
 FILE *check_file_fr;
 
 int check_file(const char* filepath) {
@@ -52,6 +54,17 @@ int remove_tab_line(char* ret, char* line, int spaces_set) {
     }
 
     return(0);
+}
+
+void print_red_space(char* line) {
+    char *newl = line;
+    newl[strcspn(newl, "\n")] = 0;
+    if (newl[strlen(newl)-1] == ' ') {
+        newl[strlen(newl)-1] = 0;
+    }
+    printf("%s%s%s%c%s\n\n", newl, RED, NEGATIVE, ' ', COLOR_RESET);
+
+    return;
 }
 
 //

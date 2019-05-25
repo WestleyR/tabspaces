@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Mat 18, 2019
+// Date: May 24, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -13,6 +13,13 @@
 //
 
 #include <stdio.h>
+
+#include "main-tabspaces.h"
+#include "utils.h"
+
+#include "logger/logger.h"
+#include "c-utils/c-utils.h"
+#include "colorc/colorc.h"
 
 int lint_file(char*, int);
 
