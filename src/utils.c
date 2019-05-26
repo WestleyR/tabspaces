@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 19, 2019
+// Date: Apr 25, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -14,30 +14,27 @@
 
 #include "utils.h"
 
-#include "colorc/colorc.h"
+int get_file(FILE** file, const char* path) {
+    *file = fopen(path, "r");
 
-FILE *check_file_fr;
-
-int check_file(const char* filepath) {
-    FILE *fr = fopen(filepath, "r");
-
-    if (fr == NULL) {
-        printf("Couldn't open file: %s!\n", filepath);
-        return(1);
+    if (file == NULL) {
+        printf("Couldn't open file: %s\n", path);
+        perror(path);
+        return(errno);
     }
 
     struct stat info;
-    if (lstat(filepath, &info) != 0) {
-        printf("unable to open stat on: %s\n", filepath);
-        return(1);
+    if (lstat(path, &info) != 0) {
+        printf("unable to open stat on: %s\n", path);
+        perror(path);
+        return(errno);
     }
 
     if (S_ISDIR(info.st_mode)) {
-        printf("file is a directory: %s\n", filepath);
-        return(1);
+        printf("%s: File is a directory\n", path);
+        return(2);
     }
-    check_file_fr = fr;
-    fclose(fr);
+//    fclose(*file);
 
     return(0);
 }

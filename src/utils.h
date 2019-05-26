@@ -14,16 +14,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
 
 #include "c-utils/c-utils.h"
+#include "colorc/colorc.h"
 
-FILE *check_file_fr;
-
-// check_file will check a file from a path.
-int check_file(const char*);
+// get_file will check, and return a FILE* from a path. Will
+// print a error if one occures.
+int get_file(FILE**, const char*);
 
 // remove_tab_line will take a string(line) and remove the tabs
 // from it and replace the tab(s) with int(spaces_set), the return

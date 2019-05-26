@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: May 24, 2019
+// Date: May 25, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -13,6 +13,7 @@
 //
 
 #include <stdio.h>
+#include <errno.h>
 
 #include "main-tabspaces.h"
 #include "utils.h"
