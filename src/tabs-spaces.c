@@ -23,27 +23,20 @@
 int view_diff(const char* file_path, int spaces_set) {
     print_verbosef("Viewing the diff\n");
 
-    FILE *fr = fopen(file_path, "r");
-    int tab_count = 0;
+    FILE *fr;
+    if (get_file(&fr, file_path) != 0) {
+        print_errorf("Failed to get file: %s\n", file_path);
+        return(1);
+    }
 
     if (fr == NULL) {
-        printf("Couldn't open file: %s!\n", file_path);
-        return(1);
-    }
-
-    struct stat info;
-    if (lstat(file_path, &info) != 0) {
-        printf("unable to open stat on: %s\n", file_path);
-        return(1);
-    }
-
-    if (S_ISDIR(info.st_mode)) {
-        printf("file is a directory: %s\n", file_path);
-        return(1);
+        print_errorf("File is NULL\n");
+        return(32);
     }
 
     int c_line;
     int lines_count = 0;
+    int tab_count = 0;
     char line[256];
     char ret_line[256];
 
@@ -78,27 +71,20 @@ int convert_tabs_to_spaces(char* file_path, int spaces_set) {
     new_line[0] = '\0';
     int total_tab_count = 0;
 
-    FILE *fr = fopen(file_path, "r");
-
+    FILE *fr;
+    if (get_file(&fr, file_path) != 0) {
+        print_errorf("Failed to get file: %s\n", file_path);
+        return(1);
+    }
 
     if (fr == NULL) {
-        printf("Couldn't open file: %s!\n", file_path);
-        return(1);
-    }
-
-    struct stat info;
-    if (lstat(file_path, &info) != 0) {
-        printf("unable to open stat on: %s\n", file_path);
-        return(1);
-    }
-
-    if (S_ISDIR(info.st_mode)) {
-        printf("file is a directory: %s\n", file_path);
-        return(1);
+        print_errorf("File is NULL\n");
+        return(32);
     }
 
     fw = fopen(TMP_FILE, "a");
     if (fw == NULL) {
+        perror(TMP_FILE);
         printf("unable to open tmp file: %s\n", TMP_FILE);
         return(1);
     }

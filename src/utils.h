@@ -1,6 +1,6 @@
 // Created by: WestleyR
 // email: westleyr@nym.hush.com
-// Date: Apr 25, 2019
+// Date: Apr 26, 2019
 // https://github.com/WestleyR/tabspaces
 // version-1.0.0
 //
@@ -22,7 +22,7 @@
 #include "c-utils/c-utils.h"
 #include "colorc/colorc.h"
 
-// get_file will check, and return a FILE* from a path. Will
+// get_file will check, and return a FILE* (as readonly) from a path. Will
 // print a error if one occures.
 int get_file(FILE**, const char*);
 

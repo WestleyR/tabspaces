@@ -12,6 +12,8 @@
 // This software is licensed under a Clear BSD License.
 //
 
+#include "utils.h"
+
 #define TMP_FILE ".temp.tmp"
 
 int spaces_to_tabs(char*, int, int);

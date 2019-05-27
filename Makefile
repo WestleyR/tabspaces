@@ -1,6 +1,6 @@
 # Created by: WestleyR
 # email: westleyr@nym.hush.com
-# Date: Apr 25, 2019
+# Date: Apr 26, 2019
 # https://github.com/WestleyR/tabspaces
 # version-1.0.2
 #
@@ -57,11 +57,13 @@ $(TARGET): $(OBJS)
 
 .PHONY:
 clean:
+	-git clean -e $(TARGET) -fx
 	rm -f $(OBJS)
 
 .PHONY:
 cleanall:
-	rm -f $(OBJS) $(TARGET)
+	-git clean -fx
+	rm -f $(TARGET) $(OBJS)
 
 .PHONY:
 install: $(TARGET)
