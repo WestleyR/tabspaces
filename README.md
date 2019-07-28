@@ -1,5 +1,9 @@
 # TabSpaces - Convert Tabs to Spaces and Spaces to Tabs
 
+**This is no longer maintained, project has moved to: https://github.com/WestleyR/clint**
+
+<br>
+
 Yes thats right, this can convert spaces to tabs, and tabs to spaces!
 
 <br>
